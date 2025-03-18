@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Decidim
   module AnonymousProposals
     module AnonymousBehaviorCommandsConcern
@@ -8,7 +10,7 @@ module Decidim
       end
 
       def anonymous_group
-        Decidim::UserGroup.where(organization: organization).anonymous.first
+        Decidim::UserGroup.where(organization:).anonymous.first
       end
 
       def set_current_user(user)

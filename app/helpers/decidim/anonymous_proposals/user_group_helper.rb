@@ -19,7 +19,7 @@ module Decidim
 
         if allow_anonymous_proposals?
           anonymous_group_extension = anonymous_group.present? ? [[t("anonymous_user", scope: "decidim.proposals.proposals.new"), anonymous_group.id]] : []
-          selected_group_id = (@form.user_group_id || options[:select_anonymous] && anonymous_group&.id).presence
+          selected_group_id = (@form.user_group_id || (options[:select_anonymous] && anonymous_group&.id)).presence
 
           form.select(
             name,
@@ -28,9 +28,9 @@ module Decidim
             include_blank: current_user.name,
             label: options.has_key?(:label) ? options[:label] : true
           )
-        else
-          return user_group_select_field(form, name, options) if current_organization.user_groups_enabled? && user_groups.any?
-        end
+        elsif current_organization.user_groups_enabled? && user_groups.any?
+          user_group_select_field(form, name, options)
+end
       end
     end
   end
