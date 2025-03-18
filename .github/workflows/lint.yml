@@ -27,9 +27,6 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - run: npm ci
-        name: Install JS deps
-
       - run: bundle exec rubocop -P
         name: Lint Ruby files
 

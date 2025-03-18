@@ -14,8 +14,10 @@ module Decidim
         @proposal = proposal
         @attached_to = proposal
         @editable = (allow_anonymous_proposals? && proposal.authored_by?(anonymous_group)) || proposal.editable_by?(current_user)
+        # rubocop:disable Layout/LineLength
         @is_anonymous = allow_anonymous_proposals? && (current_user.blank? || (proposal.published? ? proposal.authored_by?(anonymous_group) : @selected_user_group == anonymous_group))
-        set_current_user(current_user)
+        # rubocop:enable Layout/LineLength
+        current_user(current_user)
       end
 
       private
