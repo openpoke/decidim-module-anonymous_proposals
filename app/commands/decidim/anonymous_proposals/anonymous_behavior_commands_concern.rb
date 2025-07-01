@@ -13,7 +13,7 @@ module Decidim
         Decidim::UserGroup.where(organization:).anonymous.first
       end
 
-      def current_user(user)
+      def current_user=(user)
         @current_user = anonymous? ? anonymous_group : user
       end
 

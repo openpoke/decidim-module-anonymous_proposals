@@ -17,7 +17,7 @@ module Decidim
         # rubocop:disable Layout/LineLength
         @is_anonymous = allow_anonymous_proposals? && (current_user.blank? || (proposal.published? ? proposal.authored_by?(anonymous_group) : @selected_user_group == anonymous_group))
         # rubocop:enable Layout/LineLength
-        current_user(current_user)
+        self.current_user = current_user
       end
 
       private

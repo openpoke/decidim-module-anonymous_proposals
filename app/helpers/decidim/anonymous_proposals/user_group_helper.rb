@@ -22,7 +22,7 @@ module Decidim
       private
 
       def skip_user_group_selection?
-        current_user.blank? || user_groups_with_anonymous.empty?
+        current_user.blank? && user_groups_with_anonymous.empty?
       end
 
       def build_user_group_options
@@ -30,7 +30,7 @@ module Decidim
       end
 
       def user_groups_with_anonymous
-        @user_groups_with_anonymous ||= UserGroup.available_for(current_user) + [anonymous_group]
+        @user_groups_with_anonymous ||= Decidim::UserGroups::ManageableUserGroups.for(current_user).verified.to_a + [anonymous_group]
       end
     end
   end
