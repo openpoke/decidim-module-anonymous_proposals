@@ -24,6 +24,27 @@ describe "Create proposal" do
     create(:user_group, organization:, extended_data: { anonymous: true })
   end
 
+  shared_examples "selects the anonymous_group and creates the proposal" do
+    it "can select anonymous group as user" do
+      expect(page).to have_content("Create proposal as")
+      expect(page).to have_content(anonymous_group.name)
+    end
+
+    it "can save the proposal as anonymous" do
+      fill_in "Title", with: "Anonymized proposal"
+      fill_in "Body", with: "Description of the anonymized proposal"
+      select anonymous_group.name, from: "Create proposal as"
+
+      expect(Decidim::Proposals::Proposal.from_author(anonymous_group).count).to eq(0)
+
+      click_on "Continue"
+
+      expect(page).to have_content(anonymous_group.name)
+
+      expect(Decidim::Proposals::Proposal.from_author(anonymous_group).count).to eq(1)
+    end
+  end
+
   describe "user group is anonymous" do
     it "has anonymous extended data" do
       expect(anonymous_group.extended_data["anonymous"]).to be true
@@ -50,10 +71,7 @@ describe "Create proposal" do
         expect(page).to have_content("Do you want other participants to follow you and comment on your proposal?")
       end
 
-      it "can seleft anonymous group as user" do
-        expect(page).to have_content("Create proposal as")
-        expect(page).to have_content(anonymous_group.name)
-      end
+      it_behaves_like "selects the anonymous_group and creates the proposal"
     end
 
     context "when the user is logged in" do
@@ -63,24 +81,7 @@ describe "Create proposal" do
         click_on "New proposal"
       end
 
-      it "can see the anonymous_group" do
-        expect(page).to have_content("Create proposal as")
-        expect(page).to have_content(anonymous_group.name)
-      end
-
-      it "can save the proposal as anonymous" do
-        fill_in "Title", with: "Anonymized proposal"
-        fill_in "Body", with: "Description of the anonymized proposal"
-        select anonymous_group.name, from: "Create proposal as"
-
-        expect(Decidim::Proposals::Proposal.from_author(anonymous_group).count).to eq(0)
-
-        click_on "Continue"
-
-        expect(page).to have_content(anonymous_group.name)
-
-        expect(Decidim::Proposals::Proposal.from_author(anonymous_group).count).to eq(1)
-      end
+      it_behaves_like "selects the anonymous_group and creates the proposal"
     end
   end
 end
