@@ -18,8 +18,6 @@ describe "Create proposal" do
            })
   end
 
-  let(:address) { "Some address" }
-
   let!(:anonymous_group) do
     create(:user_group, organization:, extended_data: { anonymous: true })
   end
@@ -57,6 +55,46 @@ describe "Create proposal" do
 
       expect(page).to have_content("New proposal")
       expect(page).to have_content("If you publish your proposal as registered user")
+    end
+  end
+
+  context "when visiting proposal component without anonymous proposals enabled" do
+    before do
+      settings = {
+        anonymous_proposals_enabled: false
+      }
+      component.update!(settings:)
+
+      visit_component
+    end
+
+    it "does not show announcements" do
+      expect(page).to have_no_content("If you publish your proposal as registered user")
+    end
+
+    context "when creating a new proposal" do
+      context "when the user is not logged_in" do
+        before do
+          visit_component
+          click_on "New proposal"
+        end
+
+        it "gets redirected to register/login" do
+          expect(page).to have_content("Create an account")
+        end
+      end
+
+      context "when the user is logged in" do
+        before do
+          login_as user, scope: :user
+          visit_component
+          click_on "New proposal"
+        end
+
+        it "does not see the anonymous group" do
+          expect(page).to have_no_content(anonymous_group.name)
+        end
+      end
     end
   end
 
