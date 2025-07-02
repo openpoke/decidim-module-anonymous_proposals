@@ -8,16 +8,14 @@ module Decidim
 
       include Decidim::AnonymousProposals::AnonymousBehaviorCommandsConcern
 
-      def initialize(form, current_user, proposal)
+      def initialize(form, user, proposal)
         @form = form
         @selected_user_group = Decidim::UserGroup.find_by(organization:, id: form.user_group_id)
         @proposal = proposal
         @attached_to = proposal
-        @editable = (allow_anonymous_proposals? && proposal.authored_by?(anonymous_group)) || proposal.editable_by?(current_user)
-        # rubocop:disable Layout/LineLength
-        @is_anonymous = allow_anonymous_proposals? && (current_user.blank? || (proposal.published? ? proposal.authored_by?(anonymous_group) : @selected_user_group == anonymous_group))
-        # rubocop:enable Layout/LineLength
-        self.current_user = current_user
+        @editable = (allow_anonymous_proposals? && proposal.authored_by?(anonymous_group)) || proposal.editable_by?(user)
+        @is_anonymous = allow_anonymous_proposals? && (user.blank? || (proposal.published? ? proposal.authored_by?(anonymous_group) : @selected_user_group == anonymous_group))
+        self.current_user = user
       end
 
       private

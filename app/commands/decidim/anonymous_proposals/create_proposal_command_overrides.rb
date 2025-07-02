@@ -8,12 +8,12 @@ module Decidim
 
       include Decidim::AnonymousProposals::AnonymousBehaviorCommandsConcern
 
-      def initialize(form, current_user, coauthorships = nil)
+      def initialize(form, user, coauthorships = nil)
         @form = form
         @selected_user_group = Decidim::UserGroup.find_by(organization: form.organization, id: form.user_group_id)
-        @is_anonymous = allow_anonymous_proposals? && (current_user.blank? || @selected_user_group == anonymous_group)
+        @is_anonymous = allow_anonymous_proposals? && (user.blank? || @selected_user_group == anonymous_group)
 
-        self.current_user = current_user
+        self.current_user = user
         @coauthorships = coauthorships
       end
 
