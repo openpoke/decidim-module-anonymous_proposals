@@ -10,6 +10,9 @@
 # rspec failure tracking
 .rspec-failures
 
+# rubocop
+.rubocop-https*
+
 # default test application
 spec/decidim_dummy_app
 

@@ -8,10 +8,10 @@ module Decidim
 
       include Decidim::AnonymousProposals::AnonymousBehaviorCommandsConcern
 
-      def initialize(proposal, current_user)
+      def initialize(proposal, user)
         @proposal = proposal
-        @is_anonymous = allow_anonymous_proposals? && (current_user.blank? || proposal.authored_by?(anonymous_group))
-        set_current_user(current_user)
+        @is_anonymous = allow_anonymous_proposals? && (user.blank? || proposal.authored_by?(anonymous_group))
+        self.current_user = user
       end
 
       private
