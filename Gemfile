@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-DECIDIM_VERSION = { github: "decidim/decidim", branch: "release/0.30-stable" }.freeze
+DECIDIM_VERSION = { github: "decidim/decidim", branch: "release/0.31-stable" }.freeze
 
 source "https://rubygems.org"
 
