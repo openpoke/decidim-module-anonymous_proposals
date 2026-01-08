@@ -10,11 +10,10 @@ module Decidim
 
       def initialize(form, user, proposal)
         @form = form
-        @selected_user_group = Decidim::UserGroup.find_by(organization:, id: form.user_group_id)
         @proposal = proposal
         @attached_to = proposal
-        @editable = (allow_anonymous_proposals? && proposal.authored_by?(anonymous_group)) || proposal.editable_by?(user)
-        @is_anonymous = allow_anonymous_proposals? && (user.blank? || (proposal.published? ? proposal.authored_by?(anonymous_group) : @selected_user_group == anonymous_group))
+        @editable = proposal.editable_by?(user || anonymous_user)
+        @is_anonymous = allow_anonymous_proposals? && user.blank?
         self.current_user = user
       end
 
