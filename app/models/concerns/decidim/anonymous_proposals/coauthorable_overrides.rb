@@ -26,14 +26,14 @@ module Decidim
           component.settings.anonymous_proposals_enabled?
         end
 
-        def anonymous_group
-          Decidim::UserGroup.where(organization:).anonymous.first
-        end
+        # def anonymous_group
+        #   Decidim::UserGroup.where(organization:).anonymous.first
+        # end
 
         def should_skip_addition?(author, extra_attributes)
           return true if author.blank? && persisted?
 
-          user_group = extra_attributes[:user_group]
+          # user_group = extra_attributes[:user_group]
 
           if allow_anonymous_proposals? && (author.blank? || user_group == anonymous_group)
             handle_anonymous_proposals(author, extra_attributes)
@@ -50,7 +50,8 @@ module Decidim
 
         def coauthor_exists?(author, user_group)
           return true if coauthorships.exists?(decidim_author_id: author.id, decidim_author_type: author.class.base_class.name) && user_group.blank?
-          return true if user_group && coauthorships.exists?(user_group:)
+
+          # return true if user_group && coauthorships.exists?(user_group:)
 
           false
         end

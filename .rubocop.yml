@@ -1,6 +1,16 @@
-inherit_from:
-  - https://raw.githubusercontent.com/decidim/decidim/release/0.31-stable/.rubocop.yml
+inherit_gem:
+  decidim-dev: rubocop-decidim.yml
 
 AllCops:
   Exclude:
+    - 'db/**/*.rb'
+    - 'development_app/**/**/*.rb'
+    - 'development_app/Gemfile'
+    - 'vendor/**/*'
     - "spec/decidim_dummy_app*/**/*"
+
+Rails/FilePath:
+  Enabled: false
+
+RSpec/IndexedLet:
+  Enabled: false

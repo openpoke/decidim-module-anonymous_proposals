@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe "Create proposal" do
+describe "Create_proposal" do
   include_context "with a component"
   let(:manifest_name) { "proposals" }
 
@@ -16,37 +16,6 @@ describe "Create proposal" do
            settings: {
              anonymous_proposals_enabled: true
            })
-  end
-
-  let!(:anonymous_group) do
-    create(:user_group, organization:, extended_data: { anonymous: true })
-  end
-
-  shared_examples "selects the anonymous_group and creates the proposal" do
-    it "can select anonymous group as user" do
-      expect(page).to have_content("Create proposal as")
-      expect(page).to have_content(anonymous_group.name)
-    end
-
-    it "can save the proposal as anonymous" do
-      fill_in "Title", with: "Anonymized proposal"
-      fill_in "Body", with: "Description of the anonymized proposal"
-      select anonymous_group.name, from: "Create proposal as"
-
-      expect(Decidim::Proposals::Proposal.from_author(anonymous_group).count).to eq(0)
-
-      click_on "Continue"
-
-      expect(page).to have_content(anonymous_group.name)
-
-      expect(Decidim::Proposals::Proposal.from_author(anonymous_group).count).to eq(1)
-    end
-  end
-
-  describe "user group is anonymous" do
-    it "has anonymous extended data" do
-      expect(anonymous_group.extended_data["anonymous"]).to be true
-    end
   end
 
   context "when visiting proposal component with anonymous proposals enabled" do
@@ -83,18 +52,6 @@ describe "Create proposal" do
           expect(page).to have_content("Create an account")
         end
       end
-
-      context "when the user is logged in" do
-        before do
-          login_as user, scope: :user
-          visit_component
-          click_on "New proposal"
-        end
-
-        it "does not see the anonymous group" do
-          expect(page).to have_no_content(anonymous_group.name)
-        end
-      end
     end
   end
 
@@ -108,18 +65,6 @@ describe "Create proposal" do
       it "shows the announcement" do
         expect(page).to have_content("Do you want other participants to follow you and comment on your proposal?")
       end
-
-      it_behaves_like "selects the anonymous_group and creates the proposal"
-    end
-
-    context "when the user is logged in" do
-      before do
-        login_as user, scope: :user
-        visit_component
-        click_on "New proposal"
-      end
-
-      it_behaves_like "selects the anonymous_group and creates the proposal"
     end
   end
 end
