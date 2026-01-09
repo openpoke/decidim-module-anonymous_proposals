@@ -25,6 +25,10 @@ module Decidim
 
       initializer "decidim_anonymous_proposals.proposals_additions" do
         config.to_prepare do
+          Decidim::User.class_eval do
+            include Decidim::AnonymousProposals::HasAnonymous
+          end
+
           Decidim::Proposals::Proposal.class_eval do
             include Decidim::AnonymousProposals::CoauthorableOverrides
           end

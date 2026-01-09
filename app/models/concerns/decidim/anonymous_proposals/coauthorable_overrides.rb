@@ -26,6 +26,10 @@ module Decidim
           component.settings.anonymous_proposals_enabled?
         end
 
+        def anonymous_user
+          Decidim::User.where(organization:).anonymous.first
+        end
+
         def should_skip_addition?(author, extra_attributes)
           return true if author.blank? && persisted?
 
@@ -37,8 +41,8 @@ module Decidim
           coauthor_exists?(author)
         end
 
-        def handle_anonymous_proposals(_author, extra_attributes)
-          extra_attributes[:author] = anonymous_user
+        def handle_anonymous_proposals(_author, _extra_attributes)
+          anonymous_user
         end
 
         def coauthor_exists?(author)

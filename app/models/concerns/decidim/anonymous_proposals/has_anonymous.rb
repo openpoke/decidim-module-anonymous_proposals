@@ -6,7 +6,8 @@ module Decidim
       extend ActiveSupport::Concern
 
       included do
-        scope :anonymous, -> { where.not("extended_data->>'anonymous' IS ?", nil) }
+        # Use IS NOT NULL because binding a parameter with IS is invalid in PostgreSQL
+        scope :anonymous, -> { where("extended_data->>'anonymous' IS NOT NULL") }
       end
     end
   end

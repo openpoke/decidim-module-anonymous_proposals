@@ -15,7 +15,7 @@ module Decidim
       private
 
       def allow_anonymous_proposals?
-        component_settings.anonymous_proposals_enabled?
+        anonymous_user.present? && component_settings.anonymous_proposals_enabled?
       end
 
       def anonymous?
@@ -23,18 +23,11 @@ module Decidim
       end
 
       def anonymous_user
-        @anonymous_user ||= Decidim::User.find_or_create_by!(
-          organization:,
-          email: "anonymous+#{organization.id}@example.org"
-        ) do |user|
-          user.name = "Anonymous"
-          user.nickname = "anonymous_#{organization.id}"
-          user.password = SecureRandom.hex(32)
-          user.confirmed_at = Time.current
-          user.accepted_tos_version = Decidim::Core::Engine.current_settings.accepted_tos_version
-          user.admin = false
-          user.extended_data = { anonymous: true }
-        end
+        @anonymous_user ||= Decidim::User.where(organization: current_organization).anonymous.first
+      end
+
+      def anonymous_user_present?
+        Decidim::User.where(organization: current_organization).anonymous.exists?
       end
     end
   end
