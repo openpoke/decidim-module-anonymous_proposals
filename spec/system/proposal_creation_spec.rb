@@ -58,6 +58,13 @@ describe "Create_proposal" do
   context "when creating a new proposal" do
     context "when the user is not logged in" do
       before do
+        settings = {
+          anonymous_proposals_enabled: true
+        }
+        component.update!(settings:)
+
+        create(:user, :confirmed, organization:, extended_data: { anonymous: true }, email: "anonymous+#{organization.id}@example.org", nickname: "anonymous_#{organization.id}")
+
         visit_component
         click_on "New proposal"
       end
