@@ -3,7 +3,7 @@
 require "decidim/dev"
 begin
   require "decidim/initiatives"
-rescue LoadError
+rescue LoadError # rubocop:disable Lint/SuppressedException
 end
 
 ENV["ENGINE_ROOT"] = File.dirname(__dir__)
