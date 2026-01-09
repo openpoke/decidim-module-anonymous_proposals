@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 require "decidim/dev"
+begin
+  require "decidim/initiatives"
+rescue LoadError
+  warn "Optional dependency 'decidim-initiatives' not found; some specs may be skipped"
+end
 
 ENV["ENGINE_ROOT"] = File.dirname(__dir__)
 
