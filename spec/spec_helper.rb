@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
 require "decidim/dev"
-begin
-  require "decidim/initiatives"
-rescue LoadError # rubocop:disable Lint/SuppressedException
-end
+require "decidim/initiatives/signature_handler"
 
 ENV["ENGINE_ROOT"] = File.dirname(__dir__)
 
