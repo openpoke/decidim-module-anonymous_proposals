@@ -12,7 +12,7 @@ checksums = [
       "/app/views/decidim/proposals/proposals/new.html.erb" => "ba8c88bdf07061fda1962c54868c9131",
       "/app/views/decidim/proposals/proposals/index.html.erb" => "573b29b837fdd0f283be5be942c05aac",
       "/app/views/decidim/proposals/proposals/edit_draft.html.erb" => "3e51c7a14d250a1abef0753a1db7661b",
-      "/app/views/decidim/proposals/proposals/_edit_form_fields.html.erb" => "127a1a65daad85d7b6f05e689c34ca43"
+      "/app/views/decidim/proposals/proposals/_edit_form_fields.html.erb" => "e2c3cdd784bfdee1672488271e518ff4"
     }
   }
 ]
