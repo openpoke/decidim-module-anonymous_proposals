@@ -154,6 +154,11 @@ GIT
       decidim-core (= 0.31.0)
     decidim-generators (0.31.0)
       decidim-core (= 0.31.0)
+    decidim-initiatives (0.31.0)
+      decidim-admin (= 0.31.0)
+      decidim-comments (= 0.31.0)
+      decidim-core (= 0.31.0)
+      decidim-verifications (= 0.31.0)
     decidim-meetings (0.31.0)
       decidim-core (= 0.31.0)
       decidim-forms (= 0.31.0)
@@ -334,6 +339,7 @@ GEM
     css_parser (1.21.1)
       addressable
     csv (3.3.5)
+    dalli (2.7.11)
     data_migrate (11.3.1)
       activerecord (>= 6.1)
       railties (>= 6.1)
@@ -978,13 +984,16 @@ PLATFORMS
 DEPENDENCIES
   bootsnap (~> 1.4)
   byebug (~> 11.0)
+  dalli (~> 2.7, >= 2.7.10)
   decidim!
   decidim-anonymous_proposals!
   decidim-dev!
+  decidim-initiatives!
   faker (~> 3.2)
   letter_opener_web
   listen
   puma (>= 4.3)
+  rubocop-performance (~> 1.25)
   uglifier (~> 4.1)
   web-console (~> 3.5)
 

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "decidim/dev"
-require "decidim/initiatives/signature_handler"
 
 ENV["ENGINE_ROOT"] = File.dirname(__dir__)
 
