@@ -11,11 +11,12 @@ namespace :decidim_anonymous_proposals do
         email: args.email || "anonymous+#{organization.id}@example.org"
       )
 
-      anonymous.name ||= args.name || "Anonymous"
-      anonymous.nickname ||= args.nickname || "anonymous_#{organization.id}"
+      anonymous.name = args.name || "Anonymous"
+      anonymous.nickname = args.nickname || "anonymous_#{organization.id}"
       anonymous.password ||= SecureRandom.hex(32)
-      anonymous.confirmed_at ||= Time.current
+      anonymous.confirmed_at = Time.current
       anonymous.accepted_tos_version ||= Decidim::Core::Engine.current_settings.accepted_tos_version
+      anonymous.tos_agreement = true
       anonymous.admin = false
       anonymous.extended_data ||= {}
       anonymous.extended_data[:anonymous] = true
