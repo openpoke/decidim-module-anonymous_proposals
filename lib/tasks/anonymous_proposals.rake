@@ -15,7 +15,7 @@ namespace :decidim_anonymous_proposals do
       anonymous.nickname = args.nickname || "anonymous_#{organization.id}"
       anonymous.password ||= SecureRandom.hex(32)
       anonymous.confirmed_at = Time.current
-      anonymous.accepted_tos_version ||= Decidim::Core::Engine.current_settings.accepted_tos_version
+      anonymous.accepted_tos_version = Time.current
       anonymous.tos_agreement = true
       anonymous.admin = false
       anonymous.extended_data ||= {}
