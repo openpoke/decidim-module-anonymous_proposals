@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-DECIDIM_VERSION = { github: "decidim/decidim", branch: "release/0.30-stable" }.freeze
+DECIDIM_VERSION = { github: "decidim/decidim", branch: "release/0.31-stable" }.freeze
 
 source "https://rubygems.org"
 
@@ -15,8 +15,9 @@ gem "uglifier", "~> 4.1"
 
 group :development, :test do
   gem "byebug", "~> 11.0", platform: :mri
-
   gem "decidim-dev", DECIDIM_VERSION
+  gem "decidim-initiatives", DECIDIM_VERSION
+  gem "rubocop-performance", "~> 1.25"
 end
 
 group :development do

@@ -32,7 +32,7 @@ module Decidim
       end
 
       def allow_anonymous_proposals?
-        Decidim::UserGroup.where(organization:).anonymous.exists? && component_settings.anonymous_proposals_enabled?
+        Decidim::User.where(organization:).anonymous.exists? && component_settings.anonymous_proposals_enabled?
       end
 
       def organization
@@ -44,7 +44,7 @@ module Decidim
       end
 
       def anonymously_editable?
-        allow_anonymous_proposals? && proposal.draft? && proposal.editable_by?(Decidim::UserGroup.where(organization:).anonymous.first)
+        allow_anonymous_proposals? && proposal.draft? && proposal.editable_by?(Decidim::User.where(organization:).anonymous.first)
       end
     end
   end

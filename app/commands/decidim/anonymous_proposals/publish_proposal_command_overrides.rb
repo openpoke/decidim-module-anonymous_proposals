@@ -10,7 +10,7 @@ module Decidim
 
       def initialize(proposal, user)
         @proposal = proposal
-        @is_anonymous = allow_anonymous_proposals? && (user.blank? || proposal.authored_by?(anonymous_group))
+        @is_anonymous = allow_anonymous_proposals? && (user.blank? || proposal.authored_by?(anonymous_user))
         self.current_user = user
       end
 

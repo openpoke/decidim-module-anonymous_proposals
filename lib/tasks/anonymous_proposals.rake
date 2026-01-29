@@ -1,21 +1,26 @@
 # frozen_string_literal: true
 
 namespace :decidim_anonymous_proposals do
-  desc "Create anonymous groups for organizations"
-  task :generate_anonymous_group, [:name, :nickname, :email, :organization_id] => :environment do |_, args|
+  desc "Create anonymous users for organizations"
+  task :generate_anonymous_user, [:name, :nickname, :email, :organization_id] => :environment do |_, args|
     organizations = args.organization_id.present? ? Decidim::Organization.where(id: args.organization_id) : Decidim::Organization.all
 
     organizations.each do |organization|
-      if Decidim::UserGroup.where(organization:).anonymous.exists? && (update_args = args.to_h.slice(:name, :nickname, :email)).present?
-        Decidim::UserGroup.where(organization:).anonymous.first.update(update_args)
-      else
-        Decidim::UserGroup.where(organization:).create!(
-          name: args.name || "Anonymous",
-          nickname: args.nickname || "anonymous",
-          email: args.email || "anonymous@example.org",
-          extended_data: { anonymous: true }
-        )
-      end
+      anonymous = Decidim::User.find_or_initialize_by(
+        organization:,
+        email: args.email || "anonymous+#{organization.id}@example.org"
+      )
+
+      anonymous.name = args.name || "Anonymous"
+      anonymous.nickname = args.nickname || "anonymous_#{organization.id}"
+      anonymous.password ||= SecureRandom.hex(32)
+      anonymous.confirmed_at = Time.current
+      anonymous.accepted_tos_version = Time.current
+      anonymous.tos_agreement = true
+      anonymous.admin = false
+      anonymous.extended_data ||= {}
+      anonymous.extended_data[:anonymous] = true
+      anonymous.save!
     end
   end
 end

@@ -9,18 +9,12 @@ module Decidim
         @is_anonymous
       end
 
-      def anonymous_group
-        Decidim::UserGroup.where(organization:).anonymous.first
+      def anonymous_user
+        Decidim::User.where(organization:).anonymous.first
       end
 
       def current_user=(user)
-        @current_user = anonymous? ? anonymous_group : user
-      end
-
-      def user_group
-        return if anonymous?
-
-        @selected_user_group
+        @current_user = anonymous? ? anonymous_user : user
       end
 
       def allow_anonymous_proposals?
