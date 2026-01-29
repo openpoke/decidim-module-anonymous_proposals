@@ -19,6 +19,8 @@ For Decidim 0.31:
 gem "decidim-anonymous_proposals", git: "https://github.com/PopulateTools/decidim-module-anonymous_proposals", branch: "release/0.31-stable"
 ```
 
+Take into account that, since the Decidim 0.31 release, this module has been refactored to use **users** instead of **user groups**. To see more about the user group deprecation, check the [Decidim 0.31 release notes](https://github.com/decidim/decidim/releases/tag/v0.31.0).
+
 For Decidim 0.30:
 ```ruby
 gem "decidim-anonymous_proposals", git: "https://github.com/PopulateTools/decidim-module-anonymous_proposals", branch: "release/0.30-stable"
