@@ -7,28 +7,49 @@ module Decidim
       extend ActiveSupport::Concern
 
       included do
-        helper_method :allow_anonymous_proposals?, :anonymous?, :anonymous_user
+        helper_method :allow_anonymous_proposals?
 
-        skip_before_action :authenticate_user!, if: :allow_anonymous_proposals?
+        prepend_before_action :set_ephemeral_user, if: :allow_anonymous_proposals?
       end
 
       private
+      def set_ephemeral_user
+        if user_signed_in?
+          update_onboarding_data
+        else
+          create_ephemeral_user
+        end
+      end
+
+      def update_onboarding_data
+        return unless current_user.ephemeral?
+
+        current_user.update(extended_data: current_user.extended_data.deep_merge("onboarding" => current_onboarding_data))
+      end
+
+      def create_ephemeral_user
+        form = Decidim::EphemeralUserForm.new(
+          organization: current_organization,
+          onboarding_data: current_onboarding_data
+        )
+        CreateEphemeralUser.call(form) do
+          on(:ok) do |ephemeral_user|
+            sign_in(ephemeral_user)
+          end
+        end
+      end
+
+      def current_onboarding_data
+        {
+          "component" => current_component.to_gid,
+          "model" =>  @proposal&.to_gid
+        }
+      end
 
       def allow_anonymous_proposals?
-        anonymous_user.present? && component_settings.anonymous_proposals_enabled?
+        component_settings.anonymous_proposals_enabled?
       end
 
-      def anonymous?
-        allow_anonymous_proposals? && (current_user.blank? || @proposal&.authored_by?(anonymous_user))
-      end
-
-      def anonymous_user
-        @anonymous_user ||= Decidim::User.where(organization: current_organization).anonymous.first
-      end
-
-      def anonymous_user_present?
-        Decidim::User.where(organization: current_organization).anonymous.exists?
-      end
     end
   end
 end

@@ -1,5 +1,5 @@
 <%= append_javascript_pack_tag "decidim_anonymous_proposals" %>
-<% unless user_signed_in? %>
+<% if current_user&.ephemeral? %>
   <%= cell(
     "decidim/announcement",
     {
