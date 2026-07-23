@@ -51,11 +51,11 @@ module Decidim
         component = Decidim.find_component_manifest(:proposals)
         component.on(:update) do |instance|
           organization = instance.organization
-          if instance.settings.anonymous_proposals_enabled?
-            organization.available_authorizations << "anonymous_proposals_handler" unless organization.available_authorizations.include?("anonymous_proposals_handler")
-          else
-            # We do not disable the authorizations, as there may be other components needing this. So removing it from the organization would create bugs in other components.
-            # organization.available_authorizations.delete("anonymous_proposals_handler")
+          if instance.settings.anonymous_proposals_enabled? && organization.available_authorizations.exclude?("anonymous_proposals_handler")
+            organization.available_authorizations << "anonymous_proposals_handler"
+            # else
+            #   We do not disable the authorizations, as there may be other components needing this. So removing it from the organization would create bugs in other components.
+            #   organization.available_authorizations.delete("anonymous_proposals_handler")
           end
           organization.save!
 
@@ -64,7 +64,7 @@ module Decidim
             instance.permissions.deep_merge!({ "withdraw" => { "authorization_handlers" => { "anonymous_proposals_handler" => {} } } })
           else
             instance.permissions.dig("withdraw", "authorization_handlers")&.delete("anonymous_proposals_handler")
-            instance.permissions.dig("withdraw")&.compact_blank!
+            instance.permissions["withdraw"]&.compact_blank!
             instance.permissions&.compact_blank!
           end
           instance.save!
@@ -72,11 +72,11 @@ module Decidim
 
         component.on(:create) do |instance|
           organization = instance.organization
-          if instance.settings.anonymous_proposals_enabled?
-            organization.available_authorizations << "anonymous_proposals_handler" unless organization.available_authorizations.include?("anonymous_proposals_handler")
-          else
-            # We do not disable the authorizations, as there may be other components needing this. So removing it from the organization would create bugs in other components.
-            # organization.available_authorizations.delete("anonymous_proposals_handler")
+          if instance.settings.anonymous_proposals_enabled? && organization.available_authorizations.exclude?("anonymous_proposals_handler")
+            organization.available_authorizations << "anonymous_proposals_handler"
+            # else
+            #   We do not disable the authorizations, as there may be other components needing this. So removing it from the organization would create bugs in other components.
+            #   organization.available_authorizations.delete("anonymous_proposals_handler")
           end
           organization.save!
 
@@ -85,7 +85,7 @@ module Decidim
             instance.permissions.deep_merge!({ "withdraw" => { "authorization_handlers" => { "anonymous_proposals_handler" => {} } } })
           else
             instance.permissions.dig("withdraw", "authorization_handlers")&.delete("anonymous_proposals_handler")
-            instance.permissions.dig("withdraw")&.compact_blank!
+            instance.permissions["withdraw"]&.compact_blank!
             instance.permissions&.compact_blank!
           end
           instance.save!

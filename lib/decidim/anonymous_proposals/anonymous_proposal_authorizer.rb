@@ -6,7 +6,7 @@ module Decidim
       def authorize
         status_code, data = *super
 
-        status_code = :ok if component && component.manifest.name === :proposals && anonymous_proposals_enabled?
+        status_code = :ok if component && component.manifest.name == :proposals && anonymous_proposals_enabled?
 
         [status_code, data]
       end

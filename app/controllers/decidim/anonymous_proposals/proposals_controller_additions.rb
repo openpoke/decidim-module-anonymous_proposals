@@ -9,7 +9,7 @@ module Decidim
       included do
         helper_method :allow_anonymous_proposals?
 
-        prepend_before_action :set_ephemeral_user, except: [:index, :show]
+        prepend_before_action :set_ephemeral_user, except: [:index, :show] # rubocop:disable Rails/LexicallyScopedActionFilter
       end
 
       private
