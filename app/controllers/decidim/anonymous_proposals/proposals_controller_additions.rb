@@ -13,6 +13,7 @@ module Decidim
       end
 
       private
+
       def set_ephemeral_user
         if user_signed_in?
           update_onboarding_data
@@ -42,14 +43,13 @@ module Decidim
       def current_onboarding_data
         {
           "component" => current_component.to_gid,
-          "model" =>  @proposal&.to_gid
+          "model" => @proposal&.to_gid
         }
       end
 
       def allow_anonymous_proposals?
         component_settings.anonymous_proposals_enabled?
       end
-
     end
   end
 end
