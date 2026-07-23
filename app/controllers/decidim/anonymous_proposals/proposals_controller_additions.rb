@@ -25,7 +25,8 @@ module Decidim
       def update_onboarding_data
         return unless current_user.ephemeral?
 
-        current_user.update(extended_data: current_user.extended_data.deep_merge("onboarding" => current_onboarding_data))
+        extended_data = current_user.extended_data || {}
+        current_user.update(extended_data: extended_data.deep_merge("onboarding" => current_onboarding_data))
       end
 
       def create_ephemeral_user
