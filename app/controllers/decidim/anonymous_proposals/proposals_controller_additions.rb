@@ -9,36 +9,23 @@ module Decidim
       included do
         helper_method :allow_anonymous_proposals?
 
-        prepend_before_action :set_ephemeral_user, if: :allow_anonymous_proposals?
+        prepend_before_action :set_ephemeral_user, except: [:index, :show]
       end
 
       private
 
       def set_ephemeral_user
-        if user_signed_in?
-          update_onboarding_data
-        else
-          create_ephemeral_user
-        end
+        return unless allow_anonymous_proposals?
+
+        create_ephemeral_user
+        update_onboarding_data
       end
 
       def update_onboarding_data
-        return unless current_user.ephemeral?
+        return unless current_user&.ephemeral?
 
         extended_data = current_user.extended_data || {}
         current_user.update(extended_data: extended_data.deep_merge("onboarding" => current_onboarding_data))
-      end
-
-      def create_ephemeral_user
-        form = Decidim::EphemeralUserForm.new(
-          organization: current_organization,
-          onboarding_data: current_onboarding_data
-        )
-        CreateEphemeralUser.call(form) do
-          on(:ok) do |ephemeral_user|
-            sign_in(ephemeral_user)
-          end
-        end
       end
 
       def current_onboarding_data
