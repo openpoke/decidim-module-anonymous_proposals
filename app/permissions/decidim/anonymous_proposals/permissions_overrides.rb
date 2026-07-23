@@ -7,7 +7,10 @@ module Decidim
       extend ActiveSupport::Concern
 
       def can_create_proposal?
-        toggle_allow([authorized?(:create), allow_anonymous_proposals?].any? && current_settings&.creation_enabled?)
+        toggle_allow(
+          current_settings&.creation_enabled? &&
+          [authorized?(:create), allow_anonymous_proposals? && user.ephemeral?].any?
+        )
       end
 
       private
