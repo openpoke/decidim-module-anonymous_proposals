@@ -1,4 +1,4 @@
-<% if current_settings.creation_enabled && !user_signed_in? && component_settings.anonymous_proposals_enabled? %>
+<% if current_settings.creation_enabled && !user_signed_in? && Decidim::AnonymousProposals::AnonymousProposalBroker.new(component_settings).allowed? %>
   <%= cell(
     "decidim/announcement",
     {

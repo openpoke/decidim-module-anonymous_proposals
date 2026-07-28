@@ -13,8 +13,9 @@ module Decidim
 
       private
 
-      delegate :settings, to: :component
-      delegate :anonymous_proposals_enabled?, to: :settings
+      def anonymous_proposals_enabled?
+        Decidim::AnonymousProposals::AnonymousProposalBroker.new(component.settings).allowed?
+      end
     end
   end
 end

@@ -20,6 +20,9 @@ module Decidim
         component = Decidim.find_component_manifest(:proposals)
         component.settings(:global) do |settings|
           settings.attribute :anonymous_proposals_enabled, type: :boolean, default: false
+
+          settings.attribute :anonymous_proposal_start_time, type: :select, default: nil, choices: ->(_context) { [nil] + (0..23).to_a }
+          settings.attribute :anonymous_proposal_end_time, type: :select, default: nil, choices: ->(_context) { [nil] + (0..23).to_a }
         end
       end
 
@@ -66,6 +69,7 @@ module Decidim
           organization.save!
 
           instance.permissions = instance.permissions || {}
+          # we do not want to add the timeframe here
           if instance.settings.anonymous_proposals_enabled?
             instance.permissions.deep_merge!({ "withdraw" => { "authorization_handlers" => { "anonymous_proposals_handler" => {} } } })
           else
@@ -87,6 +91,7 @@ module Decidim
           organization.save!
 
           instance.permissions = instance.permissions || {}
+          # we do not want to add the timeframe here
           if instance.settings.anonymous_proposals_enabled?
             instance.permissions.deep_merge!({ "withdraw" => { "authorization_handlers" => { "anonymous_proposals_handler" => {} } } })
           else

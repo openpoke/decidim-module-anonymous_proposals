@@ -36,7 +36,7 @@ module Decidim
       end
 
       def allow_anonymous_proposals?
-        component_settings.anonymous_proposals_enabled?
+        Decidim::AnonymousProposals::AnonymousProposalBroker.new(component_settings).allowed?
       end
     end
   end
