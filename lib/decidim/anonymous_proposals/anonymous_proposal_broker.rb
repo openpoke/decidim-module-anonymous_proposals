@@ -32,10 +32,19 @@ module Decidim
       end
 
       def within_timeframe?
-        [
-          settings.anonymous_proposal_start_time.to_i <= Time.current.hour,
-          settings.anonymous_proposal_end_time.to_i > Time.current.hour
-        ].all?
+        within_bounds?(
+          settings.anonymous_proposal_start_time.to_i,
+          settings.anonymous_proposal_end_time.to_i,
+          Time.current.hour
+        )
+      end
+
+      def within_bounds?(start_hour, end_hour, current_hour)
+        if start_hour <= end_hour
+          start_hour <= current_hour && current_hour < end_hour
+        else
+          current_hour >= start_hour || current_hour < end_hour
+        end
       end
 
       def timeframe_enabled?

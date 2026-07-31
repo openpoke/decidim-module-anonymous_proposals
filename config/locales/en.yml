@@ -79,6 +79,7 @@ en:
               21: "21:00"
               22: "22:00"
               23: "23:00"
+              24: "24:00"
             anonymous_proposal_start_time: Start time when anonymous proposals are accepted
             anonymous_proposal_end_time: End time when anonymous proposals are accepted
             anonymous_proposals_enabled: Allow anonymous users to create proposals

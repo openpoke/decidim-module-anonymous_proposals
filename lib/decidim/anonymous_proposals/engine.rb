@@ -22,7 +22,7 @@ module Decidim
           settings.attribute :anonymous_proposals_enabled, type: :boolean, default: false
 
           settings.attribute :anonymous_proposal_start_time, type: :select, default: nil, choices: ->(_context) { [nil] + (0..23).to_a }
-          settings.attribute :anonymous_proposal_end_time, type: :select, default: nil, choices: ->(_context) { [nil] + (0..23).to_a }
+          settings.attribute :anonymous_proposal_end_time, type: :select, default: nil, choices: ->(_context) { [nil] + (0..24).to_a }
         end
       end
 
