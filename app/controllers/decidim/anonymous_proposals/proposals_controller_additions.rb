@@ -7,27 +7,36 @@ module Decidim
       extend ActiveSupport::Concern
 
       included do
-        helper_method :allow_anonymous_proposals?, :anonymous?, :anonymous_user
+        helper_method :allow_anonymous_proposals?
 
-        skip_before_action :authenticate_user!, if: :allow_anonymous_proposals?
+        prepend_before_action :set_ephemeral_user, except: [:index, :show] # rubocop:disable Rails/LexicallyScopedActionFilter
       end
 
       private
 
+      def set_ephemeral_user
+        return unless allow_anonymous_proposals?
+
+        create_ephemeral_user
+        update_onboarding_data
+      end
+
+      def update_onboarding_data
+        return unless current_user&.ephemeral?
+
+        extended_data = current_user.extended_data || {}
+        current_user.update(extended_data: extended_data.deep_merge("onboarding" => current_onboarding_data))
+      end
+
+      def current_onboarding_data
+        {
+          "component" => current_component.to_gid,
+          "model" => @proposal&.to_gid
+        }
+      end
+
       def allow_anonymous_proposals?
-        anonymous_user.present? && component_settings.anonymous_proposals_enabled?
-      end
-
-      def anonymous?
-        allow_anonymous_proposals? && (current_user.blank? || @proposal&.authored_by?(anonymous_user))
-      end
-
-      def anonymous_user
-        @anonymous_user ||= Decidim::User.where(organization: current_organization).anonymous.first
-      end
-
-      def anonymous_user_present?
-        Decidim::User.where(organization: current_organization).anonymous.exists?
+        component_settings.anonymous_proposals_enabled?
       end
     end
   end
