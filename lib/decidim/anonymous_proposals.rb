@@ -8,5 +8,6 @@ module Decidim
   # This namespace holds the logic of the `AnonymousProposals` module
   module AnonymousProposals
     autoload :AnonymousProposalAuthorizer, "decidim/anonymous_proposals/anonymous_proposal_authorizer"
+    autoload :AnonymousProposalBroker, "decidim/anonymous_proposals/anonymous_proposal_broker"
   end
 end
