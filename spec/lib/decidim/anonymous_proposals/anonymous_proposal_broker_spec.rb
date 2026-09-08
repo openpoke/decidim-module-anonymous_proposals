@@ -19,7 +19,10 @@ RSpec.describe Decidim::AnonymousProposals::AnonymousProposalBroker do
   end
 
   before do
-    allow(Time).to receive(:current).and_return(Time.new(2026, 7, 31, current_hour, 0, 0, 0))
+    today = Time.zone.today
+    allow(Time).to receive(:current).and_return(
+      Time.zone.local(today.year, today.month, today.day, current_hour, 0, 0)
+    )
   end
 
   describe "#allowed?" do
@@ -201,6 +204,89 @@ RSpec.describe Decidim::AnonymousProposals::AnonymousProposalBroker do
 
       it "returns false" do
         expect(broker.send(:correct_settings?)).to be(false)
+      end
+    end
+  end
+
+  describe "timezone handling" do
+    let(:start_time) { 10 }
+    let(:end_time) { 18 }
+
+    around do |example|
+      Time.use_zone(Time.zone) do
+        example.run
+      end
+    end
+
+    context "when the system timezone differs from the application timezone" do
+      before do
+        Time.use_zone("Europe/Sofia") do
+          # Simulate system timezone being UTC
+          travel_to Time.utc(Date.current.year, Date.current.month, Date.current.day, 7, 0, 0)
+        end
+      end
+
+      it "uses the application timezone for the current hour comparison" do
+        # In Europe/Sofia, it's 10:00 (within the 10-18 window)
+        # even though UTC time is 07:00
+        expect(broker.allowed?).to be(true)
+      end
+
+      it "uses Time.zone.now.hour rather than Time.current.hour" do
+        allow(Time).to receive(:current).and_return(Time.utc(Date.current.year, Date.current.month, Date.current.day, 5, 0, 0))
+        travel_to Time.utc(Date.current.year, Date.current.month, Date.current.day, 5, 0, 0) do
+          Time.use_zone("Europe/Sofia") do
+            allow(Time).to receive(:current).and_return(Time.zone.now)
+            # Time.current.hour would be 5 (UTC), but Time.zone.now.hour is 8 (Sofia)
+            # Both are outside 10-18, so this should be false
+            expect(broker.allowed?).to be(false)
+          end
+        end
+      end
+    end
+
+    context "when daylight saving time transitions" do
+      context "when spring forward occurs (clocks move forward 1 hour)" do
+        it "correctly uses the DST-adjusted timezone hour" do
+          # On 2026-03-29 (last Sunday of March), clocks jump from 01:00 GMT to 02:00 BST at 01:00 UTC
+          travel_to Time.utc(2026, 3, 29, 9, 30, 0) do
+            Time.use_zone("Europe/London") do
+              allow(Time).to receive(:current).and_return(Time.zone.now)
+              # 09:30 UTC is after the transition, so London is on BST (UTC+1): 10:30 local
+              expect(Time.zone.now.hour).to eq(10)
+              # Local hour 10 is the inclusive start of the 10-18 window
+              expect(broker.allowed?).to be(true)
+            end
+          end
+        end
+      end
+
+      context "when summer time is in effect" do
+        it "uses BST (UTC+1) hour correctly" do
+          travel_to Time.utc(2026, 6, 15, 17, 30, 0) do
+            Time.use_zone("Europe/London") do
+              allow(Time).to receive(:current).and_return(Time.zone.now)
+              # 17:30 UTC in summer, London is on BST (UTC+1): 18:30 local
+              expect(Time.zone.now.hour).to eq(18)
+              # Local hour 18 is the exclusive end of the 10-18 window
+              expect(broker.allowed?).to be(false)
+            end
+          end
+        end
+      end
+    end
+
+    context "with non-UTC timezones" do
+      it "uses the correct timezone hour for comparison" do
+        travel_to Time.utc(Date.current.year, Date.current.month, Date.current.day, 21, 0, 0) do
+          Time.use_zone("America/New_York") do
+            allow(Time).to receive(:current).and_return(Time.zone.now)
+            # At 21:00 UTC, New York is EDT (UTC-4), so local hour is 17
+            expect(Time.zone.now.hour).to eq(17)
+            # With start=10, end=18, current hour should be 17 (within window)
+            expect(broker.allowed?).to be(true)
+          end
+        end
       end
     end
   end
