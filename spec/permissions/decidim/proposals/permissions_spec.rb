@@ -52,7 +52,7 @@ describe Decidim::Proposals::Permissions do
     end
   end
 
-  context "when accepting annonymous proposals" do
+  context "when accepting anonymous proposals" do
     let(:user) { create(:user, :ephemeral, organization: proposal_component.organization) }
     let(:anonymous_proposals_enabled) { true }
 

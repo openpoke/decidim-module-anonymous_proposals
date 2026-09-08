@@ -8,7 +8,7 @@ describe "Admin manages component publication" do # rubocop:disable RSpec/Descri
     let(:title) { translated(current_component.name) }
 
     context "when creating a component", :versioning do
-      it "can create proposal" do
+      it "can create a proposals component with anonymous proposals enabled" do
         expect(participatory_space.organization.available_authorizations).not_to include("anonymous_proposals_handler")
 
         expect(component.reload.organization.available_authorizations).not_to include("anonymous_proposals_handler")
@@ -32,7 +32,7 @@ describe "Admin manages component publication" do # rubocop:disable RSpec/Descri
 
         expect(page).to have_admin_callout("Component created successfully. You can add a content block for this component in the home of the space.")
 
-        # for some reason, we cannot test the component settings
+        # NOTE: We only assert the organization-level authorization handler here (component settings are not directly asserted in this flow).
         expect(participatory_space.reload.organization.available_authorizations).to include("anonymous_proposals_handler")
       end
     end
