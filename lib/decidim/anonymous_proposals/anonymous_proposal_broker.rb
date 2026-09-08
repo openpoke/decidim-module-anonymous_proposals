@@ -33,8 +33,8 @@ module Decidim
 
       def within_timeframe?
         within_bounds?(
-          Time.local(Date.current.year, Date.current.month, Date.current.day, settings.anonymous_proposal_start_time.to_i, 0).in_time_zone,
-          Time.local(Date.current.year, Date.current.month, Date.current.day, settings.anonymous_proposal_end_time.to_i, 0).in_time_zone,
+          Time.zone.local(Date.current.year, Date.current.month, Date.current.day, settings.anonymous_proposal_start_time.to_i, 0).in_time_zone,
+          Time.zone.local(Date.current.year, Date.current.month, Date.current.day, settings.anonymous_proposal_end_time.to_i, 0).in_time_zone,
           Time.current
         )
       end
