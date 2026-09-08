@@ -248,14 +248,14 @@ RSpec.describe Decidim::AnonymousProposals::AnonymousProposalBroker do
     context "when daylight saving time transitions" do
       context "when spring forward occurs (clocks move forward 1 hour)" do
         it "correctly uses the DST-adjusted timezone hour" do
-          # On the DST transition day in Europe/London (last Sunday of March),
-          # clocks jump from 01:00 to 02:00 (BST, UTC+1)
-          travel_to Time.utc(Date.current.year, Date.current.month, Date.current.day, 0, 30, 0) do
+          # On 2026-03-29 (last Sunday of March), clocks jump from 01:00 GMT to 02:00 BST at 01:00 UTC
+          travel_to Time.utc(2026, 3, 29, 9, 30, 0) do
             Time.use_zone("Europe/London") do
               allow(Time).to receive(:current).and_return(Time.zone.now)
-              # At 00:30 UTC on March 29, 2026, London is still GMT (UTC+0)
-              # so Time.zone.now.hour is 0
-              expect(Time.zone.now.hour).to eq(1)
+              # 09:30 UTC is after the transition, so London is on BST (UTC+1): 10:30 local
+              expect(Time.zone.now.hour).to eq(10)
+              # Local hour 10 is the inclusive start of the 10-18 window
+              expect(broker.allowed?).to be(true)
             end
           end
         end
@@ -263,11 +263,13 @@ RSpec.describe Decidim::AnonymousProposals::AnonymousProposalBroker do
 
       context "when summer time is in effect" do
         it "uses BST (UTC+1) hour correctly" do
-          travel_to Time.utc(Date.current.year, Date.current.month, Date.current.day, 9, 0, 0) do
+          travel_to Time.utc(2026, 6, 15, 17, 30, 0) do
             Time.use_zone("Europe/London") do
               allow(Time).to receive(:current).and_return(Time.zone.now)
-              # At 09:00 UTC, London is BST (UTC+1), so local hour is 10
-              expect(Time.zone.now.hour).to eq(10)
+              # 17:30 UTC in summer, London is on BST (UTC+1): 18:30 local
+              expect(Time.zone.now.hour).to eq(18)
+              # Local hour 18 is the exclusive end of the 10-18 window
+              expect(broker.allowed?).to be(false)
             end
           end
         end
