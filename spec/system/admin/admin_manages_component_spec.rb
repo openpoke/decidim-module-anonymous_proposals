@@ -47,13 +47,7 @@ describe "Admin manages component publication" do # rubocop:disable RSpec/Descri
           click_on "Components"
         end
 
-        within "tr", text: title do
-          find("button[data-controller='dropdown']").click
-          click_on "Configure"
-        end
-
-        step_settings = find_by_id("step_settings")
-        page.scroll_to step_settings
+        go_to_settings
 
         expect(page).to have_content("Allow anonymous users to create proposals")
         check "Allow anonymous users to create proposals"
@@ -66,13 +60,7 @@ describe "Admin manages component publication" do # rubocop:disable RSpec/Descri
         expect(component.reload.organization.available_authorizations).to include("anonymous_proposals_handler")
         expect(component.permissions.dig("withdraw", "authorization_handlers")).to include({ "anonymous_proposals_handler" => {} })
 
-        within "tr", text: title do
-          find("button[data-controller='dropdown']").click
-          click_on "Configure"
-        end
-
-        step_settings = find_by_id("step_settings")
-        page.scroll_to step_settings
+        go_to_settings
 
         expect(page).to have_content("Allow anonymous users to create proposals")
         uncheck "Allow anonymous users to create proposals"
@@ -95,13 +83,7 @@ describe "Admin manages component publication" do # rubocop:disable RSpec/Descri
           click_on "Components"
         end
 
-        within "tr", text: title do
-          find("button[data-controller='dropdown']").click
-          click_on "Configure"
-        end
-
-        step_settings = find_by_id("step_settings")
-        page.scroll_to step_settings
+        go_to_settings
 
         expect(page).to have_content("Allow anonymous users to create proposals")
         check "Allow anonymous users to create proposals"
@@ -116,13 +98,7 @@ describe "Admin manages component publication" do # rubocop:disable RSpec/Descri
         expect(component.reload.organization.available_authorizations).to include("anonymous_proposals_handler")
         expect(component.permissions.dig("withdraw", "authorization_handlers")).to include({ "anonymous_proposals_handler" => {} })
 
-        within "tr", text: title do
-          find("button[data-controller='dropdown']").click
-          click_on "Configure"
-        end
-
-        step_settings = find_by_id("step_settings")
-        page.scroll_to step_settings
+        go_to_settings
 
         expect(page).to have_content("Allow anonymous users to create proposals")
         uncheck "Allow anonymous users to create proposals"
@@ -140,5 +116,14 @@ describe "Admin manages component publication" do # rubocop:disable RSpec/Descri
         expect(component.reload.permissions).to be_empty
       end
     end
+  end
+  def go_to_settings
+    within "tr", text: title do
+      find("button[data-controller='dropdown']").click
+      click_on "Configure"
+    end
+
+    step_settings = find_by_id("step_settings")
+    page.scroll_to step_settings
   end
 end
