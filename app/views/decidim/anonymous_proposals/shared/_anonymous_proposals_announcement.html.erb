@@ -4,8 +4,8 @@
     {
       I18n.locale => t(
         ".text_html",
-        registration_link: link_to(t("register", scope: "decidim.anonymous_proposals"), decidim.new_user_registration_path, target: "_blank", class: "external-link-container"),
-        new_session_link: link_to(t("new_session", scope: "decidim.anonymous_proposals"), decidim.new_user_session_path, target: "_blank", class: "external-link-container")
+        registration_link: link_to(t("register", scope: "decidim.anonymous_proposals"), decidim.new_user_registration_path, class: "external-link-container"),
+        new_session_link: link_to(t("new_session", scope: "decidim.anonymous_proposals"), decidim.new_user_session_path, class: "external-link-container")
       )
     },
     callout_class: "warning"
