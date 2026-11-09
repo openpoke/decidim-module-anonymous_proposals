@@ -6,24 +6,24 @@ module Decidim
     module PermissionsOverrides
       extend ActiveSupport::Concern
 
-      def permissions
-        return permission_action unless user_or_anonymous_action?(permission_action)
+      # def permissions
+      #   return permission_action unless user_or_anonymous_action?(permission_action)
 
-        # Delegate the admin permission checks to the admin permissions class
-        return Decidim::Proposals::Admin::Permissions.new(user, permission_action, context).permissions if permission_action.scope == :admin
-        return permission_action if permission_action.scope != :public
+      #   # Delegate the admin permission checks to the admin permissions class
+      #   return Decidim::Proposals::Admin::Permissions.new(user, permission_action, context).permissions if permission_action.scope == :admin
+      #   return permission_action if permission_action.scope != :public
 
-        case permission_action.subject
-        when :proposal
-          apply_proposal_permissions(permission_action)
-        when :collaborative_draft
-          apply_collaborative_draft_permissions(permission_action)
-        else
-          permission_action
-        end
+      #   case permission_action.subject
+      #   when :proposal
+      #     apply_proposal_permissions(permission_action)
+      #   when :collaborative_draft
+      #     apply_collaborative_draft_permissions(permission_action)
+      #   else
+      #     permission_action
+      #   end
 
-        permission_action
-      end
+      #   permission_action
+      # end
 
       private
 
