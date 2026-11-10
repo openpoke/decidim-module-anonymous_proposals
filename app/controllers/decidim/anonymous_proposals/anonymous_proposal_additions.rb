@@ -5,6 +5,8 @@ module Decidim
     module AnonymousProposalAdditions
       extend ActiveSupport::Concern
 
+      protected
+
       def create_ephemeral_user
         return if user_signed_in?
 
