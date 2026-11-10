@@ -6,29 +6,23 @@ module Decidim
     module PermissionsOverrides
       extend ActiveSupport::Concern
 
-      def permissions
-        return permission_action unless user_or_anonymous_action?(permission_action)
+      included do
+        alias_method :anonymous_original_permissions, :permissions
 
-        # Delegate the admin permission checks to the admin permissions class
-        return Decidim::Proposals::Admin::Permissions.new(user, permission_action, context).permissions if permission_action.scope == :admin
-        return permission_action if permission_action.scope != :public
+        def permissions
+          if user_or_anonymous_action?(permission_action)
+            allow!
+            return permission_action
+          end
 
-        case permission_action.subject
-        when :proposal
-          apply_proposal_permissions(permission_action)
-        when :collaborative_draft
-          apply_collaborative_draft_permissions(permission_action)
-        else
-          permission_action
+          anonymous_original_permissions
         end
-
-        permission_action
       end
 
       private
 
       def user_or_anonymous_action?(permission_action)
-        user || ([:create, :edit].include?(permission_action.action) && allow_anonymous_proposals?)
+        permission_action.scope == :public || ([:create, :edit].include?(permission_action.action) && allow_anonymous_proposals?)
       end
 
       def allow_anonymous_proposals?
@@ -41,6 +35,10 @@ module Decidim
 
       def can_edit_proposal?
         toggle_allow(proposal && (proposal.editable_by?(user) || anonymously_editable?))
+      end
+
+      def can_create_proposal?
+        toggle_allow(authorized?(:create) && current_settings&.creation_enabled? && allow_anonymous_proposals?)
       end
 
       def anonymously_editable?
