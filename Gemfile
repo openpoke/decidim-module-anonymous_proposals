@@ -9,15 +9,13 @@ ruby RUBY_VERSION
 gem "decidim", DECIDIM_VERSION
 gem "decidim-anonymous_proposals", path: "."
 
-gem "bootsnap", "~> 1.24"
-gem "puma", ">= 6.3.1"
-gem "uglifier", "~> 4.1"
+gem "bootsnap", "~> 1.4"
+gem "puma", ">= 4.3"
 
 group :development, :test do
   gem "byebug", ">= 11", platform: :mri
   gem "decidim-dev", DECIDIM_VERSION
   gem "decidim-initiatives", DECIDIM_VERSION
-  gem "rubocop-performance", "~> 1.25"
 end
 
 group :development do

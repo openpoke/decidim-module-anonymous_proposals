@@ -278,7 +278,8 @@ RSpec.describe Decidim::AnonymousProposals::AnonymousProposalBroker do
 
     context "with non-UTC timezones" do
       it "uses the correct timezone hour for comparison" do
-        travel_to Time.utc(Date.current.year, Date.current.month, Date.current.day, 21, 0, 0) do
+        # Fixed summer date so New York is always on EDT regardless of when the spec runs
+        travel_to Time.utc(2026, 6, 15, 21, 0, 0) do
           Time.use_zone("America/New_York") do
             allow(Time).to receive(:current).and_return(Time.zone.now)
             # At 21:00 UTC, New York is EDT (UTC-4), so local hour is 17
