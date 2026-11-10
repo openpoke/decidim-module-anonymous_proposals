@@ -25,16 +25,13 @@ module Decidim
 
       initializer "decidim_anonymous_proposals.proposals_additions" do
         config.to_prepare do
+          Decidim::Proposals::Permissions.include(Decidim::AnonymousProposals::PermissionsOverrides)
           Decidim::User.class_eval do
             include Decidim::AnonymousProposals::HasAnonymous
           end
 
           Decidim::Proposals::Proposal.class_eval do
             include Decidim::AnonymousProposals::CoauthorableOverrides
-          end
-
-          Decidim::Proposals::Permissions.class_eval do
-            prepend Decidim::AnonymousProposals::PermissionsOverrides
           end
 
           Decidim::Proposals::ProposalsController.class_eval do
