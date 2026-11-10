@@ -17,7 +17,9 @@ checksums = [
       "/app/views/decidim/proposals/proposals/new.html.erb" => "ba8c88bdf07061fda1962c54868c9131",
       "/app/views/decidim/proposals/proposals/index.html.erb" => "cd4be96ca73de79b0f8d82f0f80f00e7",
       "/app/views/decidim/proposals/proposals/edit_draft.html.erb" => "3e51c7a14d250a1abef0753a1db7661b"
-    },
+    }
+  },
+  {
     package: "decidim-core",
     files: {
       "/lib/decidim/coauthorable.rb" => "0f7654ef8a968942b391dd671b27d06c"
