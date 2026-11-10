@@ -9,10 +9,23 @@ checksums = [
   {
     package: "decidim-proposals",
     files: {
+      "/app/controllers/decidim/proposals/proposals_controller.rb" => "c37b628d7426f957d1340a4b40ab6787",
+      "/app/commands/decidim/proposals/create_proposal.rb" => "f88c0aa5b5927410707bc356eef8f544",
+      "/app/commands/decidim/proposals/update_proposal.rb" => "aac67a59183b35341471013407b7da7e",
+      "/app/commands/decidim/proposals/publish_proposal.rb" => "e09c81d15493760f736d6b2020bae98c",
+      "/app/permissions/decidim/proposals/permissions.rb" => "6618dfe4b3cf7cfcd9ed338b282dbd7e",
       "/app/views/decidim/proposals/proposals/new.html.erb" => "ba8c88bdf07061fda1962c54868c9131",
       "/app/views/decidim/proposals/proposals/index.html.erb" => "e3733b41a9bb2feca2faa1c0ef725ee3",
       "/app/views/decidim/proposals/proposals/_proposal_actions.html.erb" => "9efcf47dbe368809d3b6ae18a24ef6e0",
       "/app/views/decidim/proposals/proposals/edit_draft.html.erb" => "3e51c7a14d250a1abef0753a1db7661b"
+      "/app/views/decidim/proposals/proposals/index.html.erb" => "cd4be96ca73de79b0f8d82f0f80f00e7",
+      "/app/views/decidim/proposals/proposals/edit_draft.html.erb" => "3e51c7a14d250a1abef0753a1db7661b"
+    }
+  },
+  {
+    package: "decidim-core",
+    files: {
+      "/lib/decidim/coauthorable.rb" => "0f7654ef8a968942b391dd671b27d06c"
     }
   }
 ]

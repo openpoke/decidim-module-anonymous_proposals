@@ -49,16 +49,10 @@ jobs:
         with:
           bundler-cache: true
 
-      - uses: nanasess/setup-chromedriver@v2
+      - uses: browser-actions/setup-chrome@v2
         with:
-          chromedriver-version: 139.0.7258.66
-
-      - name: Remove Chrome
-        run: sudo apt remove google-chrome-stable
-
-      - uses: browser-actions/setup-chrome@v1
-        with:
-          chrome-version: 139.0.7258.66
+          chrome-version: 155
+          install-chromedriver: true
 
       - uses: actions/setup-node@v3
         with:
