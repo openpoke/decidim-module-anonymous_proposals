@@ -6,10 +6,23 @@ module Decidim
     module PermissionsOverrides
       extend ActiveSupport::Concern
 
+      included do
+        alias_method :anonymous_original_permissions, :permissions
+
+        def permissions
+          if user_or_anonymous_action?(permission_action)
+            allow!
+            return permission_action
+          end
+
+          anonymous_original_permissions
+        end
+      end
+
       private
 
       def user_or_anonymous_action?(permission_action)
-        user || ([:create, :edit].include?(permission_action.action) && allow_anonymous_proposals?)
+        permission_action.scope == :public || ([:create, :edit].include?(permission_action.action) && allow_anonymous_proposals?)
       end
 
       def allow_anonymous_proposals?
