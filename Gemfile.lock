@@ -188,7 +188,7 @@ GIT
 PATH
   remote: .
   specs:
-    decidim-anonymous_proposals (0.32.0)
+    decidim-anonymous_proposals (0.32.1)
       decidim-core (>= 0.32.0)
       deface (~> 1.9)
 
@@ -1099,7 +1099,7 @@ CHECKSUMS
   decidim (0.32.2)
   decidim-accountability (0.32.2)
   decidim-admin (0.32.2)
-  decidim-anonymous_proposals (0.32.0)
+  decidim-anonymous_proposals (0.32.1)
   decidim-api (0.32.2)
   decidim-assemblies (0.32.2)
   decidim-blogs (0.32.2)
